@@ -45,6 +45,7 @@ service postgresql stop
 #carto postgres extension
 RUN git clone https://github.com/CartoDB/cartodb-postgresql.git &&\
 cd cartodb-postgresql &&\
+git checkout 0.18.5 &&\
 PGUSER=postgres make install
 
 #GIS dependencies
@@ -78,7 +79,7 @@ apt-get install -q -y nodejs
 #SQL API
 RUN git clone git://github.com/CartoDB/CartoDB-SQL-API.git &&\
 cd CartoDB-SQL-API &&\
-git checkout master &&\
+git checkout 1.42.6 &&\
 npm install 
 
 #MAPS API:
@@ -132,13 +133,15 @@ ADD ./config/database.yml /cartodb/config/database.yml
 ADD ./config/grunt_production.json /cartodb/config/grunt_production.json
 
 RUN locale-gen en_US.UTF-8
+RUN locale-gen pt_BR.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LC_ALL pt_BR.UTF-8
 
 
 RUN cd cartodb &&\
-    npm install npm@2.14.9 -g &&\
+    git checkout 4.0.4 &&\
+    npm install npm@2.14.16 -g &&\
     npm -v &&\
     export PATH=$PATH:$PWD/node_modules/grunt-cli/bin &&\
     bundle install &&\
@@ -163,6 +166,6 @@ ENV GDAL_DATA /usr/share/gdal/2.1
 ADD ./startup.sh /opt/startup.sh
 ADD ./config/varnish /etc/default/varnish
 
-VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql", "/data"]
 
 CMD ["/bin/bash", "/opt/startup.sh"]
