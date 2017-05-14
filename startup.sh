@@ -6,6 +6,9 @@ service postgresql start
 service redis-server start
 service varnish start
 
+redis-cli config set appendonly yes
+redis-cli config set save ""
+
 cd /Windshaft-cartodb
 node app.js production &
 
