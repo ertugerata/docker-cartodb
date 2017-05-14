@@ -1,0 +1,2 @@
+FROM nginx
+COPY config/cartodb.nginx.proxy.conf /etc/nginx/nginx.conf
